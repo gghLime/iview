@@ -1,0 +1,150 @@
+@font-face {
+  font-family: "fd-iconfont";
+  src: url('../font/iconfont.eot?t=1467878636');
+  src: url('../font/iconfont.eot?t=1467878636#iefix') format('embedded-opentype'), url('../font/iconfont.woff?t=1467878636') format('woff'), url('../font/iconfont.ttf?t=1467878636') format('truetype'), url('../font/iconfont.svg?t=1467878636#fd-iconfont') format('svg')
+}
+
+.fd-iconfont {
+  font-family: "fd-iconfont" !important;
+  font-size: 20px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0;
+  -moz-osx-font-smoothing: grayscale
+}
+
+.fd-insurance:before {
+  content: "\e600"
+}
+
+.fd-delete:before {
+  content: "\e601"
+}
+
+.fd-investment:before {
+  content: "\e602"
+}
+
+.fd-cash:before {
+  content: "\e603"
+}
+
+.fd-edit:before {
+  content: "\e604"
+}
+
+.fd-liabilities:before {
+  content: "\e605"
+}
+
+.fd-financial:before {
+  content: "\e606"
+}
+
+.fd-show:before {
+  content: "\e607"
+}
+
+.fd-creditcard:before {
+  content: "\e608"
+}
+
+.fd-virtual:before {
+  content: "\e609"
+}
+
+.fd-bond:before {
+  content: "\e60a"
+}
+
+.fd-bill:before {
+  content: "\e60b"
+}
+
+.fd-doublearrow-up:before {
+  content: "\e60c"
+}
+
+.fd-income:before {
+  content: "\e60d"
+}
+
+.fd-expenditure:before {
+  content: "\e60e"
+}
+
+.fd-calender:before {
+  content: "\e60f"
+}
+
+.fd-budget:before {
+  content: "\e610"
+}
+
+.fd-hide:before {
+  content: "\e611"
+}
+
+.fd-arrow-up:before {
+  content: "\e612"
+}
+
+.fd-arrow-down:before {
+  content: "\e613"
+}
+
+.fd-arrow-right:before {
+  content: "\e614"
+}
+
+.fd-arrow-left:before {
+  content: "\e615"
+}
+
+.fd-plus:before {
+  content: "\e616"
+}
+
+.fd-longarrow-down:before {
+  content: "\e617"
+}
+
+.fd-arrow-soild:before {
+  content: "\e618"
+}
+
+.fd-doublearrow-down:before {
+  content: "\e619"
+}
+
+.fd-longarrow-up:before {
+  content: "\e61a"
+}
+
+.fd-image:before {
+  content: "\e61b"
+}
+
+.fd-money:before {
+  content: "\e61c"
+}
+
+.fd-bell:before {
+  content: "\e61d"
+}
+
+.fd-lend:before {
+  content: "\e61e"
+}
+
+.fd-borrow:before {
+  content: "\e61f"
+}
+
+.fd-debet01:before {
+  content: "\e620"
+}
+
+.fd-pay01:before {
+  content: "\e621"
+}
