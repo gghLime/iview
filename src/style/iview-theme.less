@@ -1,26 +1,61 @@
 @import '~iview/src/styles/index.less';
-@primary-color: #d09a56;
+@primary-color: #2fa0ff;
 .ivu-input-group-prepend{
-  background: #fdfdfd !important;
+  background: #f1b1b1 !important;
 }
+.user .ivu-input-group-prepend,
+.login .ivu-input-group-prepend{
+  background: #eee !important;
+}
+.user .ivu-input-group-append,
 .login .ivu-input-group-append{
   padding: 0;
 }
 .header a{
   color: #495060;
 }
-.header .ivu-menu-item-selected a{
-  color: #d09a56;
+.header .ivu-menu-item .ivu-menu-item.ivu-menu-item-selected a{
+  color: #2fa0ff;
+}
+.header .ivu-menu-submenu .ivu-menu-item.ivu-menu-item-selected a{
+  color: #fff;
 }
 .ivu-menu-primary.ivu-menu-horizontal .ivu-menu-item-active, .ivu-menu-primary.ivu-menu-horizontal .ivu-menu-submenu-active, .ivu-menu-primary.ivu-menu-horizontal .ivu-menu-item:hover, .ivu-menu-primary.ivu-menu-horizontal .ivu-menu-submenu:hover{
   background: #fff;
-  color: #d09a56;
+  color: #2fa0ff;
 }
 .ivu-menu-primary.ivu-menu-horizontal .ivu-menu-item-active:hover{
-  color: #d09a56 !important;
+  color: #2fa0ff !important;
   background: #fff !important;
 }
 .charge .ivu-upload{
   width: 100% !important;
   height: 100% !important;
+}
+.orange {
+  color: #ff5051;
+}
+.gray {
+  color: #72767e;
+}
+.green {
+  color: #229d89;
+}
+.report .ivu-dropdown-item{
+  padding: 7px 16px;
+  box-sizing: border-box;
+}
+.report .ivu-dropdown-menu{
+  min-width: 80px;
+}
+.report .ivu-btn{
+  padding: 6px 4px;
+}
+.charge-form .ivu-table .ivu-table-body{
+  td{
+    height: 48px;
+  }
+  .ivu-table-expanded-cell{
+    padding: 10px;
+  }
 }

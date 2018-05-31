@@ -4,7 +4,7 @@
     <div class="login-form-div">
       <Form v-show="formType === 'login'" ref="loginForm" :model="userLogin" :rules="loginline" class="login-form">
           <p class="login-form-title">账号登录</p>
-          <FormItem prop="user">
+          <FormItem prop="account">
               <Input size="large" type="text" v-model="userLogin.account" placeholder="请输入账号">
                   <label slot="prepend">登录帐号</label>
               </Input>
@@ -26,7 +26,7 @@
       </Form>
       <Form v-show="formType === 'sign'" ref="signForm" :model="userSign" :rules="signline" class="login-form">
           <p class="login-form-title">账号登录</p>
-          <FormItem prop="user">
+          <FormItem prop="account">
               <Input size="large" type="text" v-model="userSign.account" placeholder="请输入账户名">
                   <label slot="prepend">登录帐号</label>
               </Input>
@@ -51,7 +51,7 @@
           </FormItem>
       </Form>
     </div>
-    <cptFooter></cptFooter>
+    <!-- <cptFooter></cptFooter> -->
   </div>
 </template>
 
@@ -87,12 +87,6 @@ export default {
             required: true,
             message: '请输入密码',
             trigger: 'blur'
-          },
-          {
-            type: 'string',
-            min: 6,
-            message: 'The password length cannot be less than 6 bits',
-            trigger: 'blur'
           }
         ]
       },
@@ -104,9 +98,22 @@ export default {
             trigger: 'blur'
           }
         ],
+        captchaCode: [
+          {
+            required: true,
+            message: '请输入验证码',
+            trigger: 'blur'
+          }
+        ],
         password: [
           {
             validator: this.validatePass,
+            trigger: 'blur'
+          },
+          {
+            type: 'string',
+            min: 6,
+            message: '密码最少为6位',
             trigger: 'blur'
           }
         ],
@@ -132,7 +139,6 @@ export default {
     this.getCaptchaCode()
     if (localStorage.getItem('userinfo') && localStorage.getItem('userinfo') !== '') {
       this.userLogin = JSON.parse(localStorage.getItem('userinfo'))
-      this.keepLogin = true
     }
   },
   watch: {
@@ -147,8 +153,6 @@ export default {
       this.$refs[name].validate(valid => {
         if (valid) {
           this[`${name}Submit`]()
-        } else {
-          this.$Message.error('Fail!')
         }
       })
     },
@@ -180,16 +184,21 @@ export default {
       })
     },
     loginFormSubmit () {
+      const _this = this
       this.$http.post('/users/login', this.userLogin).then((res) => {
-        console.log(res)
+        localStorage.setItem('curUser', JSON.stringify(res.data))
         if (res.status === 200) {
-          if (this.keepLogin) {
-            localStorage.setItem('userinfo', JSON.stringify(this.userLogin))
-          }
-          localStorage.setItem('curUser', JSON.stringify(this.userLogin))
-          this.$router.push('/')
+          _this.$http.get('/users/info').then(res => {
+            if (_this.keepLogin) {
+              localStorage.setItem('userinfo', JSON.stringify(res.data))
+            }
+            localStorage.setItem('curUser', JSON.stringify(res.data))
+            _this.$router.push('/')
+          })
+          _this.userLogin.id = res.data.id
+          _this.$store.commit('setUserId', res.data.id)
         } else {
-          this.$Message.error(res.message)
+          _this.$Message.error(res.message)
         }
       }).catch(error => {
         console.log(error)
@@ -208,6 +217,8 @@ export default {
           'password': this.userSign.password
         }
         this.loginFormSubmit()
+      }).catch(error => {
+        this.$Message.error(error.response.data.message)
       })
     }
   }
@@ -233,9 +244,9 @@ export default {
         text-align: center;
         line-height: 64px;
         margin-bottom: 20px;
-        color: #d09a56;
+        color: #2fa0ff;
         font-size: 24px;
-        border-bottom: 4px solid #d09a56;
+        border-bottom: 4px solid #2fa0ff;
       }
       .login-btn {
         border: 0;
@@ -243,12 +254,12 @@ export default {
         width: 100%;
         height: 36px;
         text-align: center;
-        background-color: #d09a56;
+        background-color: #2fa0ff;
         color: #fff;
         font-size: 16px;
         border-radius: 3px;
         &:hover{
-          background-color: #c58534;
+          background-color: #276fd4;
         }
       }
       .login-control{

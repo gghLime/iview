@@ -18,6 +18,6 @@ export default {
   padding-top: 70px;
 }
 body{
-  background: url(./assets/body_bg.jpg);
+  background: url(./assets/body_bg.png);
 }
 </style>

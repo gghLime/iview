@@ -1,9 +1,9 @@
 <template>
   <div class="index">
     <cptHeader :isLogin='false'></cptHeader>
-    <img class="bcg-img" src="../assets/bcg.jpg">
+    <img class="bcg-img" src="../assets/bcg.png">
     <router-view class="content-view"></router-view>
-    <cptFooter></cptFooter>
+    <!-- <cptFooter></cptFooter> -->
   </div>
 </template>
 
@@ -16,6 +16,8 @@ export default {
   data () {
     return {
     }
+  },
+  mounted () {
   },
   computed: {
   },

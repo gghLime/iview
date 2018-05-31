@@ -12,13 +12,18 @@
           <MenuItem name="3">
               <router-link to="/report">报表</router-link>
           </MenuItem>
-          <Submenu name="4">
+          <Submenu name="4" style="width: auto;">
             <template slot="title">
                   {{username}}
             </template>
             <MenuItem name="3-1">
-              <router-link to="/report">个人中心</router-link></MenuItem>
-            <MenuItem name="3-2">退出</MenuItem>
+              <router-link to="/user">个人中心</router-link></MenuItem>
+            <MenuItem name="3-2">
+              <p @click="modal = true">退出</p>
+              <Modal v-model="modal" @on-ok="logout">
+                  <p>退出登录？</p>
+              </Modal>
+            </MenuItem>
           </Submenu>
         </Menu>
       </div>
@@ -33,7 +38,8 @@ export default {
   data () {
     return {
       type: 'login',
-      username: ''
+      username: '',
+      modal: false
     }
   },
   props: ['isLogin'],
@@ -46,10 +52,16 @@ export default {
     typeChange () {
       this.type = this.formType === 'login' ? 'sign' : 'login'
       this.$store.commit('loginFormChange', this.type)
+    },
+    logout () {
+      localStorage.removeItem('curUser')
+      this.$router.go('/login')
     }
   },
   mounted () {
-    this.username = JSON.parse(localStorage.getItem('curUser')).account
+    if (localStorage.getItem('curUser')) {
+      this.username = JSON.parse(localStorage.getItem('curUser')).nickname
+    }
   }
 }
 </script>
@@ -80,7 +92,7 @@ export default {
         height: $all;
         .ivu-menu{
           height: calc(100% - 1px);
-          width: 400px;
+          min-width: 400px;
           margin-top: 2px;
           &>li{
             width: 100px;
@@ -104,7 +116,7 @@ export default {
         color: #2e2e2e;
         cursor: pointer;
         &:hover {
-          color: #bf8619;
+          color: #2fa0ff;
         }
       }
     }

@@ -1,7 +1,7 @@
 <template>
   <div class="overview">
     <div class="ov-left">
-      <div class="ov-box">
+      <!-- <div class="ov-box">
         <h3 class="item-title">资产概况</h3>
         <div class="asset clearfix">
           <div class="o-i-item o-i-1">
@@ -17,7 +17,7 @@
             <p class="amount" id="netAmount" title="69045.40">69,045.40</p>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="ov-box">
         <h3 class="item-title">收支表</h3>
         <div class="out-in-info">
@@ -32,13 +32,13 @@
               收入
             </div>
             <div class="float-left d-i-2">
-              <a class="money" href="javascript:void(0)">¥25,000.00</a>
+              <a class="money" href="javascript:void(0)">￥{{overviewData.income && overviewData.income.week ? overviewData.income.week : 0}}</a>
             </div>
             <div class="float-left d-i-3">
-              <a class="money" href="javascript:void(0)">¥143,200.00</a>
+              <a class="money" href="javascript:void(0)">￥{{overviewData.income && overviewData.income.month ? overviewData.income.month : 0}}</a>
             </div>
             <div class="float-left d-i-4">
-              <a class="money" href="javascript:void(0)">¥143,200.00</a>
+              <a class="money" href="javascript:void(0)">￥{{overviewData.income && overviewData.income.year ? overviewData.income.year : 0}}</a>
             </div>
           </div>
           <div class="out-detail clearfix">
@@ -47,40 +47,41 @@
               支出
             </div>
             <div class="float-left d-i-2">
-              <a class="money" href="javascript:void(0)">¥13,854.60</a>
+              <a class="money" href="javascript:void(0)">￥{{overviewData.expenses && overviewData.expenses.week ? overviewData.expenses.week : 0}}</a>
             </div>
             <div class="float-left d-i-3">
-              <a class="money" href="javascript:void(0)">¥74,154.60</a>
+              <a class="money" href="javascript:void(0)">￥{{overviewData.expenses && overviewData.expenses.month ? overviewData.expenses.month : 0}}</a>
             </div>
             <div class="float-left d-i-4">
-              <a class="money" href="javascript:void(0)">¥74,154.60</a>
+              <a class="money" href="javascript:void(0)">￥{{overviewData.expenses && overviewData.expenses.year ? overviewData.expenses.year : 0}}</a>
             </div>
           </div>
         </div>
       </div>
       <div class="ov-box">
-        <h3 class="item-title">2018年5月财务简报</h3>
+        <h3 class="item-title">{{timeStamp}}月财务简报</h3>
         <div class="brief-report">
           <p class="day-info">
             <i class="fd-iconfont fd-calender"></i>
-             今天是您记账的第 <strong>23</strong> 天，  此账本共记录 <strong>53</strong> 笔流水。
+             今天是您记账的第 <strong>{{briefData.keepDays}}</strong> 天，  此账本共记录 <strong>{{briefData.countNum}}</strong> 笔流水。
           </p>
-          <div class="month-info-wrap">
+          <!-- <div class="month-info-wrap">
             <p class="month-info">
               <i class="fd-iconfont fd-budget"></i>
               本月预算额度 <strong title="80,000.00">80,000.00</strong> 元 ，已使用 <strong class="green" title="74,154.60">74,154.60</strong> 元，还剩 <strong title="5,845.40">5,845.40</strong> 元可用。
             </p>
-          </div>
+          </div> -->
         </div>
       </div>
       <div class="ov-box clearfix">
-        <div class="float-left out-report"></div>
+        <div class="float-left out-report" id="out-report-chart" v-show="pieData.length > 0"></div>
+        <img src="../../assets/ov-pie-demo.png" v-show="pieData.length <= 0" class="float-left out-report"/>
         <div class="float-right trend-report">
-          <h3 class="item-title float-left">本月支出趋势图</h3>
-          <a class="txt float-right" href="javascript:void(0)">更多 &gt;&gt;</a>
+          <!-- <h3 class="item-title float-left" style="font-weight: 900;font-family:微软雅黑;">本月支出趋势图</h3> -->
+          <!-- <a class="txt float-right" href="javascript:void(0)">更多 &gt;&gt;</a> -->
           <div class="report-chart" style="overflow-x: auto;overflow-y: hidden;">
-            <div id="divMonthLine" style="width: 775px; left: -297px;">
-              <div id="divMonthLine_sub" data-highcharts-chart="0" style="width: 775px; right: 0px;"></div>
+            <div id="divMonthLine" style="width: 100%; left: -297px;">
+              <div id="divMonthLine_sub" data-highcharts-chart="0" style="width: 100%; right: 0px;"></div>
             </div>
           </div>
         </div>
@@ -92,11 +93,12 @@
           <div id="touxiang">
             <div class="avatar">
               <a class="tx-a" href="javascript:void(0)" title="个人中心">
-                <img src="https://res.sui.com/img/common/photo_default.png" alt="头像" style="width: 100%; height: 100%; margin: 0px;">
+                <img v-show="avatar.length > 0" :src="avatar" alt="头像" style="width: 100%; height: 100%; margin: 0px;">
+                <img v-show="avatar.length === 0" src="../../../static/photo_default.png" alt="头像" style="width: 100%; height: 100%; margin: 0px;">
               </a>
             </div>
             <div class="user-info">
-              <a href="javascript:void(0)" class="username">体验用户</a>
+              <a href="javascript:void(0)" class="username">{{username}}</a>
             </div>
           </div>
         </div>
@@ -106,7 +108,13 @@
           </div>
         </div>
         <div class="m-l-c">
-          <p class="empty-info">还米有收到消息哦~</p>
+          <p class="empty-info" v-if="warningData.length === 0">还米有收到消息哦~</p>
+          <p class="empty-info" v-else>
+            <div v-for="(item, index) in warningData" :key="index" style="border-bottom: 1px dashed #ccc;width: 100%;height: auto;">
+              <p>{{item.content}}</p>
+              <p style="color: #aaa;text-align: right;">{{item.createDate}}</p>
+            </div>
+          </p>
         </div>
       </div>
     </div>
@@ -118,76 +126,169 @@ export default {
   name: 'overview',
   data () {
     return {
+      username: JSON.parse(localStorage.getItem('curUser')).nickname,
+      avatar: '',
+      warningData: [],
+      overviewData: {
+        income: {},
+        expenses: {}
+      },
+      briefData: {},
+      pieData: [],
+      ovpieNameData: [],
+      lineData: [],
+      lineNameData: [],
+      timeStamp: ''
     }
   },
   computed: {
   },
   mounted () {
-    let echarts = require('echarts')
-    let outChart = echarts.init(document.getElementsByClassName('out-report')[0])
-    let trendChart = echarts.init(document.getElementById('divMonthLine_sub'))
-    let outOption = {
-      title: {
-        text: '本月分类支出',
-        x: 'left'
-      },
-      tooltip: {
-        trigger: 'item',
-        formatter: '{b}<br> 金额: {c}<br> 占比: {d}%'
-      },
-      legend: {
-        orient: 'vertical',
-        left: 'right',
-        data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
-      },
-      series: [
-        {
-          name: '访问来源',
-          type: 'pie',
-          radius: '70%',
-          center: ['38%', '50%'],
-          label: {
-            normal: {
-              formatter: '{d}%',
-              position: 'inner'
+    if (!localStorage.getItem('curUser')) return
+    this.getOverview()
+    this.timeStamp = `${new Date().getFullYear()}年${new Date().getMonth() + 1}`
+  },
+  methods: {
+    getOverview () {
+      if (JSON.parse(localStorage.getItem('curUser')).avatar && JSON.parse(localStorage.getItem('curUser')).avatar !== '') {
+        this.avatar = JSON.parse(localStorage.getItem('curUser')).avatar
+      }
+      let echarts = require('echarts')
+      this.$http.get('/index/warning').then((res) => {
+        if (res.data) {
+          this.warningData = res.data
+        }
+      })
+      this.$http.get('/index/overview').then((res) => {
+        if (res.data) {
+          this.overviewData = res.data
+        }
+      })
+      this.$http.get('/index/briefing').then((res) => {
+        this.briefData = res.data
+      })
+      this.$http.get('/index/categoryPieReport').then((res) => {
+        this.pieData = res.data
+        this.ovpieNameData = []
+        if (this.pieData.length > 0) {
+          this.pieData.forEach(item => {
+            this.ovpieNameData.push(item.name)
+          })
+        }
+        let outOption = {
+          title: {
+            text: '本月分类支出',
+            x: 'left'
+          },
+          tooltip: {
+            trigger: 'item',
+            formatter: '{b}<br> 金额: {c}<br> 占比: {d}%'
+          },
+          legend: {
+            orient: 'vertical',
+            left: 'right',
+            data: this.ovpieNameData
+          },
+          series: [
+            {
+              name: '分类',
+              type: 'pie',
+              radius: '70%',
+              center: ['38%', '50%'],
+              label: {
+                normal: {
+                  formatter: '{d}%',
+                  position: 'inner'
+                }
+              },
+              data: this.pieData,
+              itemStyle: {
+                emphasis: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+              }
+            }
+          ],
+          color: ['#87CEFA', '#7FFFAA', '#FFB6C1', '#FF7F50', '#556B2F', '#D3D3D3', '#FF4500']
+        }
+        this.$nextTick(() => {
+          let outChart = echarts.init(document.getElementById('out-report-chart'))
+          outChart.setOption(outOption)
+        })
+      })
+      this.$http.get('/index/expensesLinearReport').then((res) => {
+        this.lineData = res.data.seriesData
+        this.lineNameData = res.data.xaxisData
+        let dateMark = parseInt(((new Date().getDate()) / 30) * 100)
+        let trendOption = {
+          title: {
+            text: '本月支出趋势图',
+            x: 'left'
+          },
+          xAxis: {
+            type: 'category',
+            data: this.lineNameData,
+            axisLine: {
+              onZero: false
             }
           },
-          data: [
-            {value: 335, name: '直接访问'},
-            {value: 310, name: '邮件营销'},
-            {value: 234, name: '联盟广告'},
-            {value: 135, name: '视频广告'},
-            {value: 1548, name: '搜索引擎'}
-          ],
-          itemStyle: {
-            emphasis: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
+          yAxis: {
+            type: 'value',
+            show: false,
+            min: function (value) {
+              return -(value.max + 1) * 2
+            },
+            max: function (value) {
+              return (value.max + 1) * 2
             }
-          }
+          },
+          grid: {
+            height: '200px',
+            width: '100%',
+            left: '4%',
+            right: '4%',
+            top: '10px'
+          },
+          dataZoom: [
+            {
+              start: dateMark - 15,
+              end: dateMark + 10,
+              handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+              handleSize: '80%',
+              handleStyle: {
+                color: '#fff',
+                shadowBlur: 3,
+                shadowColor: 'rgba(0, 0, 0, 0.6)',
+                shadowOffsetX: 2,
+                shadowOffsetY: 2
+              }
+            }
+          ],
+          series: [{
+            data: this.lineData,
+            type: 'line',
+            itemStyle: {
+              color: '#229d89'
+            },
+            label: {
+              show: true,
+              position: 'top',
+              color: '#229d89',
+              fontWeight: 600
+            },
+            lineStyle: {
+              color: '#2fa0ff'
+            }
+          }]
         }
-      ]
+        this.$nextTick(() => {
+          let trendChart = echarts.init(document.getElementById('divMonthLine_sub'))
+          trendChart.setOption(trendOption)
+        })
+      })
     }
-    let trendOption = {
-      xAxis: {
-        type: 'category',
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-      },
-      yAxis: {
-        type: 'value'
-      },
-      grid: {
-        height: '200px',
-        top: '20px'
-      },
-      series: [{
-        data: [820, 932, 901, 934, 1290, 1330, 1320],
-        type: 'line'
-      }]
-    }
-    outChart.setOption(outOption)
-    trendChart.setOption(trendOption)
   }
 }
 </script>
@@ -297,6 +398,7 @@ export default {
         }
         .d-i-1 {
           width: 57px;
+          height: $all;
           .fd-iconfont {
             font-size: 19px;
             vertical-align: middle;
@@ -306,15 +408,18 @@ export default {
           }
         }
         .d-i-2 {
+          height: $all;
           width: 156px;
           text-align: right;
         }
         .d-i-3 {
           width: 205px;
+          height: $all;
           text-align: right;
         }
         .d-i-4 {
           width: 205px;
+          height: $all;
           text-align: right;
         }
       }

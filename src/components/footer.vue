@@ -60,7 +60,7 @@ export default {
 }
 .login{
   .footer{
-    background: url(../assets/body_bg.jpg);
+    background: url(../assets/body_bg.png);
     .footer-container{
       border-top: 1px solid #ccc;
     }
